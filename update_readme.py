@@ -17,13 +17,14 @@ except Exception as e:
     print(f"API Hatası: {e}")
     exit(1)
 
-table = "| 📦 Proje | 🔄 İşlem | 📅 Tarih |\n|---|---|---|\n"
+# Başlığı artık Python scriptimizin içine aldık
+table = "### 🚀 Son Aktiviteler\n\n| 📦 Proje | 🔄 İşlem | 📅 Tarih |\n|---|---|---|\n"
 
 count = 0
 for event in events:
     repo_name = event['repo']['name']
     
-    # 1. ÇÖZÜM: Botun profili güncellediği kendi işlemlerini tablodan gizle
+    # Botun profili güncellediği kendi işlemlerini tablodan gizle
     if repo_name == f"{USERNAME}/{USERNAME}":
         continue
         
@@ -31,7 +32,6 @@ for event in events:
         date = event['created_at'][:10]
         
         if event['type'] == 'PushEvent':
-            # 2. ÇÖZÜM: 'size' ile gerçek commit sayısını al, bulamazsa en az 1 yaz.
             commit_count = event['payload'].get('size', 1)
             action = f"🚀 {commit_count} Commit"
         else:
@@ -47,11 +47,12 @@ if count == 0:
 with open("README.md", "r", encoding="utf-8") as f:
     readme_icerik = f.read()
 
-# 3. ÇÖZÜM: Etiketlerin (tags) içini silmek yerine etiketlerle birlikte temiz bir şekilde baştan yaz (Sonsuz tablo sorununu çözer)
-pattern = r".*?"
-replacement = f"\n{table}\n"
+# KESİN ÇÖZÜM: Dosyadaki tüm kopyalanmış tabloları ve başlıkları bulup yokediyoruz
+temiz_readme = re.sub(r".*?", "", readme_icerik, flags=re.DOTALL)
+temiz_readme = re.sub(r"### 🚀 Son Aktiviteler", "", temiz_readme).strip()
 
-yeni_readme = re.sub(pattern, replacement, readme_icerik, flags=re.DOTALL)
+# Temizlenmiş dosyanın en sonuna sadece 1 tane yeni tablo ekliyoruz
+yeni_readme = f"{temiz_readme}\n\n\n{table}\n\n"
 
 with open("README.md", "w", encoding="utf-8") as f:
     f.write(yeni_readme)
