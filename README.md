@@ -3,5 +3,8 @@
 
 ### 🚀 Son Aktiviteler
 <!-- START_SECTION:activity -->
-<!-- Bu aralığa bot tarafından otomatik tablo eklenecek -->
+| 📦 Proje | 🔄 İşlem | 📅 Tarih |
+|---|---|---|
+| - | Şu an yakın zamanda PR bulunmuyor | - |
+
 <!-- END_SECTION:activity -->
