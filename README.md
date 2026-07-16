@@ -1,6 +1,6 @@
 # Merhaba, Ben Yiğit 👋
 
-Su altyapısı, hidrolik modelleme ve SCADA sistemleri üzerine çalışan bir altyapı yüklenicisi ve yazılım geliştiricisiyim. Sahadaki karmaşık mühendislik problemlerini kod yazarak çözüyor; kod yazarken de yapay zekanın sınırlarını zorluyorum.
+Su altyapısı, hidrolik modelleme ve SCADA sistemleri üzerine çalışan bir mühendisim. Sahadaki karmaşık mühendislik problemlerini kod yazarak çözüyor; kod yazarken de yapay zekanın sınırlarını zorluyorum.
 
 **Neler Yapıyorum?**
 * 🌊 Su altyapısı ve SCADA sistemlerini birbirine bağlayan, yönetimi dijitalleştiren özel entegrasyon yazılımları geliştiriyorum.
