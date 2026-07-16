@@ -1,10 +1,71 @@
 # Merhaba, Ben Yiğit 👋
-(Buraya normal statik profil açıklamanı yazabilirsin...)
-
-### 🚀 Son Aktiviteler
-<!-- START_SECTION:activity -->
 | 📦 Proje | 🔄 İşlem | 📅 Tarih |
 |---|---|---|
-| - | Şu an yakın zamanda PR bulunmuyor | - |
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
 
-<!-- END_SECTION:activity -->
+| 📦 Proje | 🔄 İşlem | 📅 Tarih |
+|---|---|---|
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+| 📦 Proje | 🔄 İşlem | 📅 Tarih |
+|---|---|---|
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+
+| 📦 Proje | 🔄 İşlem | 📅 Tarih |
+|---|---|---|
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+
+| 📦 Proje | 🔄 İşlem | 📅 Tarih |
+|---|---|---|
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+
+| 📦 Proje | 🔄 İşlem | 📅 Tarih |
+|---|---|---|
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+
+| 📦 Proje | 🔄 İşlem | 📅 Tarih |
+|---|---|---|
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+
+| 📦 Proje | 🔄 İşlem | 📅 Tarih |
+|---|---|---|
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+| 📦 Proje | 🔄 İşlem | 📅 Tarih |
+|---|---|---|
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+| [yigitgltkn/yigitgltkn](https://github.com/yigitgltkn/yigitgltkn) | 🚀 0 Commit | 2026-07-16 |
+
