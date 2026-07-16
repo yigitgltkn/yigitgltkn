@@ -21,14 +21,18 @@ table = "| 📦 Proje | 🔄 İşlem | 📅 Tarih |\n|---|---|---|\n"
 
 count = 0
 for event in events:
-    # Hem Push (Commit) hem de PR etkinliklerini yakala
+    repo_name = event['repo']['name']
+    
+    # 1. ÇÖZÜM: Botun profili güncellediği kendi işlemlerini tablodan gizle
+    if repo_name == f"{USERNAME}/{USERNAME}":
+        continue
+        
     if event['type'] in ['PushEvent', 'PullRequestEvent'] and count < 5:
-        repo_name = event['repo']['name']
         date = event['created_at'][:10]
         
         if event['type'] == 'PushEvent':
-            # Atılan commit sayısını al
-            commit_count = len(event['payload'].get('commits', []))
+            # 2. ÇÖZÜM: 'size' ile gerçek commit sayısını al, bulamazsa en az 1 yaz.
+            commit_count = event['payload'].get('size', 1)
             action = f"🚀 {commit_count} Commit"
         else:
             action_type = event['payload']['action']
@@ -38,17 +42,16 @@ for event in events:
         count += 1
 
 if count == 0:
-    table += "| - | Son 90 günde açık aktivite yok | - |\n"
+    table += "| - | Yakın zamanda açık kaynak aktivitesi yok | - |\n"
 
 with open("README.md", "r", encoding="utf-8") as f:
     readme_icerik = f.read()
 
-yeni_readme = re.sub(
-    r"(?<=\n).*?(?=\n)",
-    table,
-    readme_icerik,
-    flags=re.DOTALL
-)
+# 3. ÇÖZÜM: Etiketlerin (tags) içini silmek yerine etiketlerle birlikte temiz bir şekilde baştan yaz (Sonsuz tablo sorununu çözer)
+pattern = r".*?"
+replacement = f"\n{table}\n"
+
+yeni_readme = re.sub(pattern, replacement, readme_icerik, flags=re.DOTALL)
 
 with open("README.md", "w", encoding="utf-8") as f:
     f.write(yeni_readme)
