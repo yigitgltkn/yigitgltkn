@@ -97,9 +97,13 @@ def cell(text, length=72):
 
 
 def bar(ratio):
-    """Turn a 0.0-1.0 ratio into a block bar."""
-    filled = round(ratio * BAR_WIDTH)
-    return "█" * filled + "░" * (BAR_WIDTH - filled)
+    """Turn a 0.0-1.0 ratio into a block bar.
+
+    Fill only, no empty track: the shaded track character renders as a
+    noisy hatch pattern in GitHub's body font. Anything above zero gets
+    at least one block so small shares stay visible.
+    """
+    return "█" * max(1, round(ratio * BAR_WIDTH))
 
 
 def commits_label(count):
@@ -260,20 +264,28 @@ def build_panel(user, repos, events, languages):
     )
 
     # --- Language chart -------------------------------------------------
+    # Rendered as a table rather than a fenced code block: a code block
+    # ships GitHub's grey chrome and a copy button, which reads as a
+    # snippet to copy instead of a panel widget. Fixed column widths keep
+    # the bars on a common baseline.
     if languages:
         total = sum(languages.values())
-        top = languages.most_common(LANGUAGE_LIMIT)
-        width = max(len(name) for name, _ in top)
-        lines = [
-            f"{name.ljust(width)}  {bar(size / total)}  {size / total * 100:5.1f}%"
-            for name, size in top
-        ]
+        rows = []
+        for name, size in languages.most_common(LANGUAGE_LIMIT):
+            share = size / total
+            rows.append(
+                "  <tr>\n"
+                f'    <td width="120"><b>{name}</b></td>\n'
+                f'    <td width="230">{bar(share)}</td>\n'
+                f'    <td width="70" align="right">{share * 100:.1f}%</td>\n'
+                "  </tr>"
+            )
         parts.append("#### Language Mix\n")
         parts.append(
             f"<sub>repos pushed in the last {LANGUAGE_WINDOW_MONTHS} months · "
             f"normalized per repo</sub>\n"
         )
-        parts.append("```text\n" + "\n".join(lines) + "\n```\n")
+        parts.append("<table>\n" + "\n".join(rows) + "\n</table>\n")
 
     # --- Recent activity ------------------------------------------------
     parts.append("#### Recent Activity\n")
