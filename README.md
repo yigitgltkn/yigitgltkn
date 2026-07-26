@@ -50,7 +50,7 @@ Sahadaki karmaşık mühendislik problemlerini kod yazarak çözüyor; kod yazar
   <tr>
     <td align="center" width="120"><b>16</b><br /><sub>Public repo</sub></td>
     <td align="center" width="120"><b>1</b><br /><sub>Yıldız</sub></td>
-    <td align="center" width="120"><b>9</b><br /><sub>Takipçi</sub></td>
+    <td align="center" width="120"><b>10</b><br /><sub>Takipçi</sub></td>
     <td align="center" width="120"><b>4</b><br /><sub>Commit / 30 gün</sub></td>
     <td align="center" width="120"><b>7</b><br /><sub>Aktif proje / 30 gün</sub></td>
   </tr>
@@ -86,6 +86,6 @@ Batchfile   ░░░░░░░░░░░░░░░░░░░░░░  
 | [Claude-Token-Optimizasyonu](https://github.com/yigitgltkn/Claude-Token-Optimizasyonu) | Claude Code kullanırken token kullanımı nasıl optimize edilir? Mevcut… | Python | 0 |
 | [graphrag-bilgi-asistani](https://github.com/yigitgltkn/graphrag-bilgi-asistani) | Yazılım dokümantasyonlarını yapay zekâ destekli bir bilgi grafiğine d… | Python | 0 |
 
-<sub>Bu panel GitHub Actions tarafından otomatik üretilir · son güncelleme 26.07.2026 12:12 UTC</sub>
+<sub>Bu panel GitHub Actions tarafından otomatik üretilir · son güncelleme 26.07.2026 12:24 UTC</sub>
 
 <!-- PANEL:END -->
