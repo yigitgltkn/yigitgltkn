@@ -1,11 +1,10 @@
-"""GitHub profil README'sindeki dinamik paneli gunceller.
+"""Update the dynamic panel inside the GitHub profile README.
 
-Sadece README.md icindeki PANEL:START / PANEL:END isaretleyicileri
-arasindaki blogu degistirir; dosyanin geri kalanina (bio, teknolojiler,
-iletisim) asla dokunmaz.
+Only the block between the PANEL:START / PANEL:END markers is replaced;
+the rest of the file (intro, tech badges, contact) is never touched.
 
-Baglantisiz calisir: harici paket yok, sadece standart kutuphane.
-Yerelde token olmadan da calisir (public API, saatlik 60 istek siniri).
+No third-party packages: standard library only. Runs locally without a
+token as well (public API, 60 requests/hour).
 """
 
 import json
@@ -17,332 +16,336 @@ from collections import Counter, OrderedDict
 from datetime import datetime, timedelta, timezone
 
 API = "https://api.github.com"
-# Actions icinde repo sahibinden gelir, yerelde sabit degere duser
+# Provided by Actions from the repository owner; falls back to a constant locally
 USERNAME = os.environ.get("GITHUB_REPOSITORY_OWNER") or "yigitgltkn"
 GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
 
-README_YOLU = "README.md"
-BASLANGIC = "<!-- PANEL:START -->"
-BITIS = "<!-- PANEL:END -->"
+README_PATH = "README.md"
+START = "<!-- PANEL:START -->"
+END = "<!-- PANEL:END -->"
 
-AKTIVITE_LIMIT = 6      # tabloda gosterilecek en fazla aktivite satiri
-PROJE_LIMIT = 4         # "Aktif Projeler" tablosundaki repo sayisi
-DIL_LIMIT = 5           # dil dagilimi grafigindeki dil sayisi
-PENCERE_GUN = 30        # "son X gun" metrikleri
-BAR_GENISLIK = 22       # dil grafigi blok genisligi
+ACTIVITY_LIMIT = 6      # max rows in the activity table
+PROJECT_LIMIT = 4       # repos listed under "Active Projects"
+LANGUAGE_LIMIT = 5      # bars in the language chart
+WINDOW_DAYS = 30        # "last X days" metrics
+BAR_WIDTH = 22          # width of the language bars
 
-# Dil dagiliminda sadece son bu kadar aydir dokunulan repolar sayilir.
-# Aksi halde 2023'teki Unity projeleri tabloyu %57 C# gosterip guncel
-# odagi (Python / TypeScript) gizliyor.
-DIL_PENCERE_AY = 24
+# Only repos pushed within this window count towards the language chart.
+# Otherwise the 2023 Unity projects render the chart as 57% C# and hide
+# the current focus (Python / TypeScript).
+LANGUAGE_WINDOW_MONTHS = 24
 
-# Panelin kendisini ureten repo: istatistiklerde ve tabloda gorunmesin
-PROFIL_REPOSU = f"{USERNAME}/{USERNAME}"
+# The repo that generates this panel: keep it out of the stats and tables
+PROFILE_REPO = f"{USERNAME}/{USERNAME}"
 
 
 # --------------------------------------------------------------------------
 # GitHub API
 # --------------------------------------------------------------------------
 
-def _tek_istek(url):
-    istek = urllib.request.Request(url)
-    istek.add_header("Accept", "application/vnd.github+json")
-    istek.add_header("User-Agent", f"{USERNAME}-profil-paneli")
+def _single_request(url):
+    request = urllib.request.Request(url)
+    request.add_header("Accept", "application/vnd.github+json")
+    request.add_header("User-Agent", f"{USERNAME}-profile-panel")
     if GITHUB_TOKEN:
-        istek.add_header("Authorization", f"Bearer {GITHUB_TOKEN}")
-    with urllib.request.urlopen(istek, timeout=30) as yanit:
-        return json.loads(yanit.read().decode("utf-8"))
+        request.add_header("Authorization", f"Bearer {GITHUB_TOKEN}")
+    with urllib.request.urlopen(request, timeout=30) as response:
+        return json.loads(response.read().decode("utf-8"))
 
 
-def api(yol, zorunlu=True, deneme=3):
-    """API'den JSON getirir. Zorunlu istek basarisiz olursa cikar.
+def api(path, required=True, attempts=3):
+    """Fetch JSON from the API. Exits if a required request keeps failing.
 
-    Kritik nokta: README yazma islemi tum veri toplandiktan SONRA yapilir.
-    Boylece API hatasi durumunda dosya oldugu gibi kalir, bozulmaz.
+    Key detail: the README is written only after all data has been
+    collected, so an API failure leaves the file exactly as it was.
     """
-    url = yol if yol.startswith("http") else f"{API}{yol}"
-    son_hata = None
-    for tur in range(deneme):
+    url = path if path.startswith("http") else f"{API}{path}"
+    last_error = None
+    for attempt in range(attempts):
         try:
-            return _tek_istek(url)
-        except Exception as hata:  # urllib.error.*, socket.timeout, JSON hatasi
-            son_hata = hata
-            if tur < deneme - 1:
-                time.sleep(2 * (tur + 1))
+            return _single_request(url)
+        except Exception as error:  # urllib.error.*, socket timeout, bad JSON
+            last_error = error
+            if attempt < attempts - 1:
+                time.sleep(2 * (attempt + 1))
 
-    if zorunlu:
-        print(f"[HATA] {url} alinamadi: {son_hata}", file=sys.stderr)
-        print("README'ye dokunulmadi.", file=sys.stderr)
+    if required:
+        print(f"[ERROR] could not fetch {url}: {last_error}", file=sys.stderr)
+        print("README left untouched.", file=sys.stderr)
         sys.exit(1)
-    print(f"[UYARI] {url} atlandi: {son_hata}", file=sys.stderr)
+    print(f"[WARN] skipped {url}: {last_error}", file=sys.stderr)
     return None
 
 
 # --------------------------------------------------------------------------
-# Yardimcilar
+# Helpers
 # --------------------------------------------------------------------------
 
-def zaman_coz(damga):
-    """'2026-07-25T11:58:07Z' -> timezone bilgili datetime."""
-    return datetime.strptime(damga, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+def parse_time(stamp):
+    """'2026-07-25T11:58:07Z' -> timezone-aware datetime."""
+    return datetime.strptime(stamp, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
 
 
-def hucre(metin, uzunluk=72):
-    """Markdown tablo hucresi icin guvenli metin (bosluk/boru/kisaltma)."""
-    if not metin:
+def cell(text, length=72):
+    """Table-safe text: collapse whitespace, escape pipes, truncate."""
+    if not text:
         return "—"
-    metin = " ".join(metin.split()).replace("|", "\\|")
-    if len(metin) > uzunluk:
-        metin = metin[: uzunluk - 1].rstrip() + "…"
-    return metin
+    text = " ".join(text.split()).replace("|", "\\|")
+    if len(text) > length:
+        text = text[: length - 1].rstrip() + "…"
+    return text
 
 
-def bar(oran):
-    """0.0-1.0 orani blok grafige cevirir."""
-    dolu = round(oran * BAR_GENISLIK)
-    return "█" * dolu + "░" * (BAR_GENISLIK - dolu)
+def bar(ratio):
+    """Turn a 0.0-1.0 ratio into a block bar."""
+    filled = round(ratio * BAR_WIDTH)
+    return "█" * filled + "░" * (BAR_WIDTH - filled)
+
+
+def commits_label(count):
+    return "1 commit" if count == 1 else f"{count} commits"
 
 
 # --------------------------------------------------------------------------
-# Veri toplama
+# Data collection
 # --------------------------------------------------------------------------
 
-def veri_topla():
-    kullanici = api(f"/users/{USERNAME}")
-    depolar = api(f"/users/{USERNAME}/repos?per_page=100&sort=pushed") or []
-    olaylar = api(f"/users/{USERNAME}/events/public?per_page=100") or []
+def collect_data():
+    user = api(f"/users/{USERNAME}")
+    repos = api(f"/users/{USERNAME}/repos?per_page=100&sort=pushed") or []
+    events = api(f"/users/{USERNAME}/events/public?per_page=100") or []
 
-    # Fork, arsiv ve panelin kendi reposu istatistige girmez:
-    # ilk ikisi kendi uretimini yansitmiyor, ucuncusu bu altyapinin kendisi.
-    kendi_depolari = [
-        d for d in depolar
-        if not d.get("fork")
-        and not d.get("archived")
-        and d["full_name"] != PROFIL_REPOSU
+    # Forks, archived repos and this panel's own repo are excluded: the first
+    # two are not my own output, the third is the infrastructure itself.
+    own_repos = [
+        r for r in repos
+        if not r.get("fork")
+        and not r.get("archived")
+        and r["full_name"] != PROFILE_REPO
     ]
 
-    return kullanici, kendi_depolari, olaylar
+    return user, own_repos, events
 
 
-def dil_dagilimi(depolar):
-    """Dil dagilimi: her repo esit agirlikta, repo ici oranlarla.
+def language_mix(repos):
+    """Language mix with every repo weighted equally by its internal shares.
 
-    Sadece DIL_PENCERE_AY icinde push alan repolar sayilir; grafik
-    "ne biliyorum" degil "su sira ne yaziyorum" sorusunu cevaplar.
+    Only repos pushed within LANGUAGE_WINDOW_MONTHS count, so the chart
+    answers "what am I writing lately" rather than "what do I know".
 
-    Ham byte toplami yaniltici oluyor: tek bir statik site reposu tum
-    grafigi %50 HTML yapip alti Python projesini gorunmez kiliyor.
-    Bu yuzden her repo kendi icinde 1.0'a normalize edilir, yani sonuc
-    "repolarimin ortalama dil dagilimi" olur.
+    Raw byte totals are misleading: a single static site repo turns the
+    whole chart into 50% HTML and hides six Python projects. So each repo
+    is normalized to 1.0 first, making the result the average language
+    mix across repos.
     """
-    esik = datetime.now(timezone.utc) - timedelta(days=DIL_PENCERE_AY * 30)
-    sayac = Counter()
+    cutoff = datetime.now(timezone.utc) - timedelta(days=LANGUAGE_WINDOW_MONTHS * 30)
+    totals = Counter()
 
-    for depo in depolar:
-        itilme = depo.get("pushed_at")  # bos repolarda None olabilir
-        if not itilme or zaman_coz(itilme) < esik:
+    for repo in repos:
+        pushed = repo.get("pushed_at")  # can be None on empty repos
+        if not pushed or parse_time(pushed) < cutoff:
             continue
-        diller = api(depo["languages_url"], zorunlu=False)
-        if not diller:
+        languages = api(repo["languages_url"], required=False)
+        if not languages:
             continue
-        depo_toplami = sum(diller.values())
-        if not depo_toplami:
+        repo_total = sum(languages.values())
+        if not repo_total:
             continue
-        for dil, byte in diller.items():
-            sayac[dil] += byte / depo_toplami
+        for language, size in languages.items():
+            totals[language] += size / repo_total
 
-    return sayac
+    return totals
 
 
-def pencere_metrikleri(olaylar):
-    """Son PENCERE_GUN gunluk commit sayisi ve dokunulan repo sayisi."""
-    esik = datetime.now(timezone.utc) - timedelta(days=PENCERE_GUN)
-    commit = 0
-    aktif_repolar = set()
+def window_metrics(events):
+    """Commit count and number of repos touched in the last WINDOW_DAYS."""
+    cutoff = datetime.now(timezone.utc) - timedelta(days=WINDOW_DAYS)
+    commits = 0
+    active_repos = set()
 
-    for olay in olaylar:
-        if olay["repo"]["name"] == PROFIL_REPOSU:
+    for event in events:
+        if event["repo"]["name"] == PROFILE_REPO:
             continue
-        if zaman_coz(olay["created_at"]) < esik:
+        if parse_time(event["created_at"]) < cutoff:
             continue
-        aktif_repolar.add(olay["repo"]["name"])
-        if olay["type"] == "PushEvent":
-            commit += olay["payload"].get("size") or 1
+        active_repos.add(event["repo"]["name"])
+        if event["type"] == "PushEvent":
+            commits += event["payload"].get("size") or 1
 
-    return commit, len(aktif_repolar)
+    return commits, len(active_repos)
 
 
-def aktivite_satirlari(olaylar):
-    """Olaylari (repo + gun + tur) bazinda birlestirir.
+def activity_rows(events):
+    """Group events by (repo, day, kind).
 
-    Eski surumdeki hata buydu: ayni gune dusen iki push, tabloda iki ayri
-    "1 Commit" satiri uretiyordu. Artik tek satirda toplaniyor.
+    This was the bug in the old version: two pushes on the same day
+    produced two separate "1 Commit" rows. They are now merged.
     """
-    gruplar = OrderedDict()  # olaylar yeniden eskiye geldigi icin sira korunur
+    groups = OrderedDict()  # events arrive newest-first, so order is preserved
 
-    for olay in olaylar:
-        depo = olay["repo"]["name"]
-        if depo == PROFIL_REPOSU:  # botun kendi commit'leri tabloya girmesin
+    for event in events:
+        repo = event["repo"]["name"]
+        if repo == PROFILE_REPO:  # keep the bot's own commits out of the table
             continue
 
-        tarih = olay["created_at"][:10]
-        tur = olay["type"]
-        yuk = olay.get("payload") or {}
+        date = event["created_at"][:10]
+        kind = event["type"]
+        payload = event.get("payload") or {}
 
-        if tur == "PushEvent":
-            anahtar = (depo, tarih, "push")
-            kayit = gruplar.setdefault(anahtar, {"sayi": 0})
-            kayit["sayi"] += yuk.get("size") or 1
+        if kind == "PushEvent":
+            key = (repo, date, "push")
+            entry = groups.setdefault(key, {"count": 0})
+            entry["count"] += payload.get("size") or 1
 
-        elif tur == "PullRequestEvent":
-            eylem = yuk.get("action")
-            birlesti = (yuk.get("pull_request") or {}).get("merged")
-            if eylem == "closed" and birlesti:
-                etiket = "Pull request birleştirildi"
-            elif eylem == "closed":
-                etiket = "Pull request kapatıldı"
-            elif eylem == "reopened":
-                etiket = "Pull request yeniden açıldı"
-            elif eylem == "opened":
-                etiket = "Pull request açıldı"
+        elif kind == "PullRequestEvent":
+            action = payload.get("action")
+            merged = (payload.get("pull_request") or {}).get("merged")
+            if action == "closed" and merged:
+                label = "Pull request merged"
+            elif action == "closed":
+                label = "Pull request closed"
+            elif action == "reopened":
+                label = "Pull request reopened"
+            elif action == "opened":
+                label = "Pull request opened"
             else:
                 continue
-            gruplar.setdefault((depo, tarih, etiket), {"sayi": 0})["sayi"] += 1
+            groups.setdefault((repo, date, label), {"count": 0})["count"] += 1
 
-        elif tur == "CreateEvent" and yuk.get("ref_type") == "repository":
-            gruplar.setdefault((depo, tarih, "Yeni repo oluşturuldu"), {"sayi": 1})
+        elif kind == "CreateEvent" and payload.get("ref_type") == "repository":
+            groups.setdefault((repo, date, "Repository created"), {"count": 1})
 
-        elif tur == "ReleaseEvent" and yuk.get("action") == "published":
-            surum = (yuk.get("release") or {}).get("tag_name") or ""
-            etiket = f"Sürüm yayınlandı {surum}".strip()
-            gruplar.setdefault((depo, tarih, etiket), {"sayi": 1})
+        elif kind == "ReleaseEvent" and payload.get("action") == "published":
+            tag = (payload.get("release") or {}).get("tag_name") or ""
+            label = f"Release published {tag}".strip()
+            groups.setdefault((repo, date, label), {"count": 1})
 
-        if len(gruplar) >= AKTIVITE_LIMIT * 3:
-            break  # limitin cok uzerine cikmaya gerek yok
+        if len(groups) >= ACTIVITY_LIMIT * 3:
+            break  # no need to collect far beyond the limit
 
-    satirlar = []
-    for (depo, tarih, tur), kayit in list(gruplar.items())[:AKTIVITE_LIMIT]:
-        if tur == "push":
-            sayi = kayit["sayi"]
-            islem = f"`{sayi} commit`"
+    rows = []
+    for (repo, date, kind), entry in list(groups.items())[:ACTIVITY_LIMIT]:
+        if kind == "push":
+            activity = f"`{commits_label(entry['count'])}`"
         else:
-            islem = tur if kayit["sayi"] < 2 else f"{tur} ×{kayit['sayi']}"
-        satirlar.append((depo, islem, tarih))
-    return satirlar
+            activity = kind if entry["count"] < 2 else f"{kind} ×{entry['count']}"
+        rows.append((repo, activity, date))
+    return rows
 
 
 # --------------------------------------------------------------------------
-# Panel uretimi
+# Panel rendering
 # --------------------------------------------------------------------------
 
-def kart(deger, etiket):
-    return f'<td align="center" width="120"><b>{deger}</b><br /><sub>{etiket}</sub></td>'
+def card(value, label):
+    return f'<td align="center" width="120"><b>{value}</b><br /><sub>{label}</sub></td>'
 
 
-def panel_olustur(kullanici, depolar, olaylar, diller):
-    commit_30, aktif_30 = pencere_metrikleri(olaylar)
-    yildiz = sum(d.get("stargazers_count", 0) for d in depolar)
-    parcalar = []
+def build_panel(user, repos, events, languages):
+    commits_30, active_30 = window_metrics(events)
+    stars = sum(r.get("stargazers_count", 0) for r in repos)
+    parts = []
 
-    # --- Istatistik kartlari -------------------------------------------
-    kartlar = [
-        kart(kullanici.get("public_repos", len(depolar)), "Public repo"),
-        kart(yildiz, "Yıldız"),
-        kart(kullanici.get("followers", 0), "Takipçi"),
-        kart(commit_30, f"Commit / {PENCERE_GUN} gün"),
-        kart(aktif_30, f"Aktif proje / {PENCERE_GUN} gün"),
+    # --- Stat cards -----------------------------------------------------
+    cards = [
+        card(user.get("public_repos", len(repos)), "Public repos"),
+        card(stars, "Stars"),
+        card(user.get("followers", 0), "Followers"),
+        card(commits_30, f"Commits / {WINDOW_DAYS}d"),
+        card(active_30, f"Active projects / {WINDOW_DAYS}d"),
     ]
-    parcalar.append("#### Profil Özeti\n")
-    parcalar.append(
-        '<table>\n  <tr>\n    ' + "\n    ".join(kartlar) + "\n  </tr>\n</table>\n"
+    parts.append("#### Overview\n")
+    parts.append(
+        '<table>\n  <tr>\n    ' + "\n    ".join(cards) + "\n  </tr>\n</table>\n"
     )
 
-    # --- Dil dagilimi --------------------------------------------------
-    if diller:
-        toplam = sum(diller.values())
-        en_iyi = diller.most_common(DIL_LIMIT)
-        genislik = max(len(ad) for ad, _ in en_iyi)
-        satirlar = [
-            f"{ad.ljust(genislik)}  {bar(byte / toplam)}  {byte / toplam * 100:5.1f}%"
-            for ad, byte in en_iyi
+    # --- Language chart -------------------------------------------------
+    if languages:
+        total = sum(languages.values())
+        top = languages.most_common(LANGUAGE_LIMIT)
+        width = max(len(name) for name, _ in top)
+        lines = [
+            f"{name.ljust(width)}  {bar(size / total)}  {size / total * 100:5.1f}%"
+            for name, size in top
         ]
-        parcalar.append("#### Teknoloji Dağılımı\n")
-        parcalar.append(
-            f"<sub>son {DIL_PENCERE_AY} ayda güncellenen depolar · "
-            f"repo başına normalize edilmiş</sub>\n"
+        parts.append("#### Language Mix\n")
+        parts.append(
+            f"<sub>repos pushed in the last {LANGUAGE_WINDOW_MONTHS} months · "
+            f"normalized per repo</sub>\n"
         )
-        parcalar.append("```text\n" + "\n".join(satirlar) + "\n```\n")
+        parts.append("```text\n" + "\n".join(lines) + "\n```\n")
 
-    # --- Son aktiviteler -----------------------------------------------
-    parcalar.append("#### Son Aktiviteler\n")
-    tablo = ["| Proje | İşlem | Tarih |", "|:--|:--|--:|"]
-    satirlar = aktivite_satirlari(olaylar)
-    if satirlar:
-        for depo, islem, tarih in satirlar:
-            ad = depo.split("/", 1)[-1]
-            tablo.append(f"| [{ad}](https://github.com/{depo}) | {islem} | {tarih} |")
+    # --- Recent activity ------------------------------------------------
+    parts.append("#### Recent Activity\n")
+    table = ["| Project | Activity | Date |", "|:--|:--|--:|"]
+    rows = activity_rows(events)
+    if rows:
+        for repo, activity, date in rows:
+            name = repo.split("/", 1)[-1]
+            table.append(f"| [{name}](https://github.com/{repo}) | {activity} | {date} |")
     else:
-        tablo.append("| — | Son 90 günde public aktivite yok | — |")
-    parcalar.append("\n".join(tablo) + "\n")
+        table.append("| — | No public activity in the last 90 days | — |")
+    parts.append("\n".join(table) + "\n")
 
-    # --- Aktif projeler ------------------------------------------------
-    projeler = depolar[:PROJE_LIMIT]  # API sort=pushed ile geldi: en yeni ustte
-    if projeler:
-        parcalar.append("#### Aktif Projeler\n")
-        tablo = ["| Proje | Açıklama | Dil | ★ |", "|:--|:--|:--|--:|"]
-        for depo in projeler:
-            tablo.append(
-                f"| [{hucre(depo['name'], 28)}]({depo['html_url']}) "
-                f"| {hucre(depo.get('description'), 70)} "
-                f"| {depo.get('language') or '—'} "
-                f"| {depo.get('stargazers_count', 0)} |"
+    # --- Active projects ------------------------------------------------
+    projects = repos[:PROJECT_LIMIT]  # API returned sort=pushed: newest first
+    if projects:
+        parts.append("#### Active Projects\n")
+        table = ["| Project | Description | Language | ★ |", "|:--|:--|:--|--:|"]
+        for repo in projects:
+            table.append(
+                f"| [{cell(repo['name'], 28)}]({repo['html_url']}) "
+                f"| {cell(repo.get('description'), 70)} "
+                f"| {repo.get('language') or '—'} "
+                f"| {repo.get('stargazers_count', 0)} |"
             )
-        parcalar.append("\n".join(tablo) + "\n")
+        parts.append("\n".join(table) + "\n")
 
-    # --- Altbilgi ------------------------------------------------------
-    simdi = datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M")
-    parcalar.append(
-        f'<sub>Bu panel GitHub Actions tarafından otomatik üretilir · '
-        f"son güncelleme {simdi} UTC</sub>"
+    # --- Footer ---------------------------------------------------------
+    now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M")
+    parts.append(
+        f"<sub>Generated automatically by GitHub Actions · "
+        f"last updated {now} UTC</sub>"
     )
 
-    return "\n".join(parcalar)
+    return "\n".join(parts)
 
 
 # --------------------------------------------------------------------------
-# README yazma
+# Writing the README
 # --------------------------------------------------------------------------
 
-def readme_guncelle(panel):
-    with open(README_YOLU, "r", encoding="utf-8") as dosya:
-        icerik = dosya.read()
+def update_readme(panel):
+    with open(README_PATH, "r", encoding="utf-8") as file:
+        content = file.read()
 
-    blok = f"{BASLANGIC}\n\n{panel}\n\n{BITIS}"
+    block = f"{START}\n\n{panel}\n\n{END}"
 
-    bas = icerik.find(BASLANGIC)
-    son = icerik.find(BITIS)
-    if bas != -1 and son > bas:
-        # Sadece iki isaretleyici arasi degisir. Duz dilim kullaniyoruz;
-        # re.sub olsa panel icindeki \g gibi diziler kacis karakteri sanilirdi.
-        yeni = icerik[:bas] + blok + icerik[son + len(BITIS):]
+    head = content.find(START)
+    tail = content.find(END)
+    if head != -1 and tail > head:
+        # Only the span between the markers changes. Plain slicing on purpose:
+        # with re.sub, sequences like \g inside the panel would be read as
+        # escape references.
+        updated = content[:head] + block + content[tail + len(END):]
     else:
-        print("[UYARI] Isaretleyici bulunamadi, panel dosya sonuna eklendi.",
+        print("[WARN] markers not found, panel appended at end of file.",
               file=sys.stderr)
-        yeni = icerik.rstrip() + "\n\n" + blok + "\n"
+        updated = content.rstrip() + "\n\n" + block + "\n"
 
-    if yeni == icerik:
-        print("Degisiklik yok.")
+    if updated == content:
+        print("No changes.")
         return
 
-    with open(README_YOLU, "w", encoding="utf-8", newline="\n") as dosya:
-        dosya.write(yeni)
-    print(f"README guncellendi ({len(yeni)} karakter).")
+    with open(README_PATH, "w", encoding="utf-8", newline="\n") as file:
+        file.write(updated)
+    print(f"README updated ({len(updated)} characters).")
 
 
 def main():
-    kullanici, depolar, olaylar = veri_topla()
-    diller = dil_dagilimi(depolar)
-    readme_guncelle(panel_olustur(kullanici, depolar, olaylar, diller))
+    user, repos, events = collect_data()
+    languages = language_mix(repos)
+    update_readme(build_panel(user, repos, events, languages))
 
 
 if __name__ == "__main__":

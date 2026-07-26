@@ -1,19 +1,19 @@
-name: Profil Panelini Guncelle
+name: Update Profile Panel
 
 on:
   schedule:
-    # 04:17 UTC (TR 07:17). Tam saat basi GitHub'da en yogun dilim oldugu icin
-    # kuyrukta beklememek adina kasitli olarak ofsetli bir saat secildi.
+    # 04:17 UTC. Deliberately offset: exactly-on-the-hour is the busiest
+    # slot on GitHub's scheduler and runs sit in the queue.
     - cron: '17 4 * * *'
   workflow_dispatch:
 
-# Bota sadece bu depoya yazma yetkisi
+# The bot only needs write access to this repository
 permissions:
   contents: write
 
-# Elle tetikleme ile zamanlanmis calisma cakisirsa push yarisi olmasin
+# Prevent a push race if a manual run overlaps the scheduled one
 concurrency:
-  group: profil-paneli
+  group: profile-panel
   cancel-in-progress: false
 
 jobs:
@@ -22,28 +22,28 @@ jobs:
     timeout-minutes: 5
 
     steps:
-      - name: Repoyu klonla
+      - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Python kurulumu
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
-      - name: Paneli olustur
+      - name: Build panel
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
         run: python update_readme.py
 
-      - name: Degisikligi gonder
+      - name: Commit and push
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add README.md
           if git diff --staged --quiet; then
-            echo "Panelde degisiklik yok, commit atlandi."
+            echo "Panel unchanged, skipping commit."
           else
-            git commit -m "chore(profil): panel guncellendi"
+            git commit -m "chore(profile): refresh panel"
             git push
           fi
