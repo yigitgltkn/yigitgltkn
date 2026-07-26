@@ -1,37 +1,49 @@
-name: Update Activity Table
+name: Profil Panelini Guncelle
 
 on:
   schedule:
-    - cron: '0 0 * * *'
+    # 04:17 UTC (TR 07:17). Tam saat basi GitHub'da en yogun dilim oldugu icin
+    # kuyrukta beklememek adina kasitli olarak ofsetli bir saat secildi.
+    - cron: '17 4 * * *'
   workflow_dispatch:
 
-# ÇÖZÜM 1: Bota depoya yazma (commit/push) yetkisi veriyoruz
+# Bota sadece bu depoya yazma yetkisi
 permissions:
   contents: write
 
+# Elle tetikleme ile zamanlanmis calisma cakisirsa push yarisi olmasin
+concurrency:
+  group: profil-paneli
+  cancel-in-progress: false
+
 jobs:
-  build:
+  panel:
     runs-on: ubuntu-latest
-    
+    timeout-minutes: 5
+
     steps:
-      # ÇÖZÜM 2: Sarı uyarıyı kaldırmak için v3'ü v4 yaptık
-      - name: Repoyu Klonla
+      - name: Repoyu klonla
         uses: actions/checkout@v4
 
-      # ÇÖZÜM 3: Sarı uyarıyı kaldırmak için v4'ü v5 yaptık
-      - name: Python Kurulumu
+      - name: Python kurulumu
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.12'
 
-      - name: Python Betiğini Çalıştır (Tabloyu Oluştur)
+      - name: Paneli olustur
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
         run: python update_readme.py
 
-      - name: Değişiklikleri Kaydet ve Gönder (Commit & Push)
+      - name: Degisikligi gonder
         run: |
-          git config --global user.name 'GitHub Action Bot'
-          git config --global user.email 'action@github.com'
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add README.md
-          git diff --quiet && git diff --staged --quiet || (git commit -m "🚀 README dinamik tablo güncellendi" && git push)
+          if git diff --staged --quiet; then
+            echo "Panelde degisiklik yok, commit atlandi."
+          else
+            git commit -m "chore(profil): panel guncellendi"
+            git push
+          fi
