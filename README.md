@@ -48,8 +48,8 @@ I solve complex field engineering problems by writing code — and while writing
 <table>
   <tr>
     <td align="center" width="120"><b>15</b><br /><sub>Public repos</sub></td>
-    <td align="center" width="120"><b>1</b><br /><sub>Stars</sub></td>
-    <td align="center" width="120"><b>61</b><br /><sub>Followers</sub></td>
+    <td align="center" width="120"><b>2</b><br /><sub>Stars</sub></td>
+    <td align="center" width="120"><b>60</b><br /><sub>Followers</sub></td>
     <td align="center" width="120"><b>4</b><br /><sub>Commits / 30d</sub></td>
     <td align="center" width="120"><b>6</b><br /><sub>Active projects / 30d</sub></td>
   </tr>
@@ -100,11 +100,11 @@ I solve complex field engineering problems by writing code — and while writing
 
 | Project | Description | Language | ★ |
 |:--|:--|:--|--:|
-| [ekap-telegram-bot](https://github.com/yigitgltkn/ekap-telegram-bot) | EKAP uzerinden istenilen keyword ile istenilen ihale tiplerini otomat… | Python | 1 |
+| [ekap-telegram-bot](https://github.com/yigitgltkn/ekap-telegram-bot) | EKAP uzerinden istenilen keyword ile istenilen ihale tiplerini otomat… | Python | 2 |
 | [Prompt-Coach](https://github.com/yigitgltkn/Prompt-Coach) | Claude Code'a gönderdiğin her prompt'u analiz eder, daha etkili halin… | TypeScript | 0 |
 | [Claude-Token-Optimizasyonu](https://github.com/yigitgltkn/Claude-Token-Optimizasyonu) | Claude Code kullanırken token kullanımı nasıl optimize edilir? Mevcut… | Python | 0 |
 | [graphrag-bilgi-asistani](https://github.com/yigitgltkn/graphrag-bilgi-asistani) | Yazılım dokümantasyonlarını yapay zekâ destekli bir bilgi grafiğine d… | Python | 0 |
 
-<sub>Generated automatically by GitHub Actions · last updated 2026-08-03 07:49 UTC</sub>
+<sub>Generated automatically by GitHub Actions · last updated 2026-08-04 06:42 UTC</sub>
 
 <!-- PANEL:END -->
