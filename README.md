@@ -105,6 +105,6 @@ I solve complex field engineering problems by writing code — and while writing
 | [Claude-Token-Optimizasyonu](https://github.com/yigitgltkn/Claude-Token-Optimizasyonu) | Claude Code kullanırken token kullanımı nasıl optimize edilir? Mevcut… | Python | 0 |
 | [graphrag-bilgi-asistani](https://github.com/yigitgltkn/graphrag-bilgi-asistani) | Yazılım dokümantasyonlarını yapay zekâ destekli bir bilgi grafiğine d… | Python | 0 |
 
-<sub>Generated automatically by GitHub Actions · last updated 2026-08-14 05:47 UTC</sub>
+<sub>Generated automatically by GitHub Actions · last updated 2026-08-15 04:49 UTC</sub>
 
 <!-- PANEL:END -->
