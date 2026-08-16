@@ -50,8 +50,8 @@ I solve complex field engineering problems by writing code — and while writing
     <td align="center" width="120"><b>15</b><br /><sub>Public repos</sub></td>
     <td align="center" width="120"><b>2</b><br /><sub>Stars</sub></td>
     <td align="center" width="120"><b>64</b><br /><sub>Followers</sub></td>
-    <td align="center" width="120"><b>4</b><br /><sub>Commits / 30d</sub></td>
-    <td align="center" width="120"><b>5</b><br /><sub>Active projects / 30d</sub></td>
+    <td align="center" width="120"><b>3</b><br /><sub>Commits / 30d</sub></td>
+    <td align="center" width="120"><b>4</b><br /><sub>Active projects / 30d</sub></td>
   </tr>
 </table>
 
@@ -94,7 +94,6 @@ I solve complex field engineering problems by writing code — and while writing
 | [Prompt-Coach](https://github.com/yigitgltkn/Prompt-Coach) | Release published v0.1.0 | 2026-07-25 |
 | [Prompt-Coach](https://github.com/yigitgltkn/Prompt-Coach) | `2 commits` | 2026-07-25 |
 | [Claude-Token-Optimizasyonu](https://github.com/yigitgltkn/Claude-Token-Optimizasyonu) | `1 commit` | 2026-07-17 |
-| [Claude-Token-Optimizasyonu](https://github.com/yigitgltkn/Claude-Token-Optimizasyonu) | `1 commit` | 2026-07-16 |
 
 #### Active Projects
 
@@ -105,6 +104,6 @@ I solve complex field engineering problems by writing code — and while writing
 | [Claude-Token-Optimizasyonu](https://github.com/yigitgltkn/Claude-Token-Optimizasyonu) | Claude Code kullanırken token kullanımı nasıl optimize edilir? Mevcut… | Python | 0 |
 | [graphrag-bilgi-asistani](https://github.com/yigitgltkn/graphrag-bilgi-asistani) | Yazılım dokümantasyonlarını yapay zekâ destekli bir bilgi grafiğine d… | Python | 0 |
 
-<sub>Generated automatically by GitHub Actions · last updated 2026-08-15 04:49 UTC</sub>
+<sub>Generated automatically by GitHub Actions · last updated 2026-08-16 04:51 UTC</sub>
 
 <!-- PANEL:END -->
