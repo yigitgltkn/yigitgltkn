@@ -49,7 +49,7 @@ I solve complex field engineering problems by writing code — and while writing
   <tr>
     <td align="center" width="120"><b>15</b><br /><sub>Public repos</sub></td>
     <td align="center" width="120"><b>2</b><br /><sub>Stars</sub></td>
-    <td align="center" width="120"><b>66</b><br /><sub>Followers</sub></td>
+    <td align="center" width="120"><b>68</b><br /><sub>Followers</sub></td>
     <td align="center" width="120"><b>2</b><br /><sub>Commits / 30d</sub></td>
     <td align="center" width="120"><b>1</b><br /><sub>Active projects / 30d</sub></td>
   </tr>
@@ -103,6 +103,6 @@ I solve complex field engineering problems by writing code — and while writing
 | [Claude-Token-Optimizasyonu](https://github.com/yigitgltkn/Claude-Token-Optimizasyonu) | Claude Code kullanırken token kullanımı nasıl optimize edilir? Mevcut… | Python | 0 |
 | [graphrag-bilgi-asistani](https://github.com/yigitgltkn/graphrag-bilgi-asistani) | Yazılım dokümantasyonlarını yapay zekâ destekli bir bilgi grafiğine d… | Python | 0 |
 
-<sub>Generated automatically by GitHub Actions · last updated 2026-08-21 04:56 UTC</sub>
+<sub>Generated automatically by GitHub Actions · last updated 2026-08-22 04:52 UTC</sub>
 
 <!-- PANEL:END -->
