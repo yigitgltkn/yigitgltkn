@@ -47,11 +47,11 @@ I solve complex field engineering problems by writing code — and while writing
 
 <table>
   <tr>
-    <td align="center" width="120"><b>15</b><br /><sub>Public repos</sub></td>
+    <td align="center" width="120"><b>16</b><br /><sub>Public repos</sub></td>
     <td align="center" width="120"><b>2</b><br /><sub>Stars</sub></td>
-    <td align="center" width="120"><b>69</b><br /><sub>Followers</sub></td>
+    <td align="center" width="120"><b>70</b><br /><sub>Followers</sub></td>
     <td align="center" width="120"><b>0</b><br /><sub>Commits / 30d</sub></td>
-    <td align="center" width="120"><b>0</b><br /><sub>Active projects / 30d</sub></td>
+    <td align="center" width="120"><b>1</b><br /><sub>Active projects / 30d</sub></td>
   </tr>
 </table>
 
@@ -62,28 +62,28 @@ I solve complex field engineering problems by writing code — and while writing
 <table>
   <tr>
     <td width="120"><b>Python</b></td>
-    <td width="230">███████████████</td>
-    <td width="70" align="right">66.7%</td>
+    <td width="230">██████████████</td>
+    <td width="70" align="right">63.0%</td>
+  </tr>
+  <tr>
+    <td width="120"><b>HTML</b></td>
+    <td width="230">████</td>
+    <td width="70" align="right">19.5%</td>
   </tr>
   <tr>
     <td width="120"><b>TypeScript</b></td>
     <td width="230">███</td>
-    <td width="70" align="right">14.1%</td>
-  </tr>
-  <tr>
-    <td width="120"><b>HTML</b></td>
-    <td width="230">███</td>
-    <td width="70" align="right">13.3%</td>
+    <td width="70" align="right">12.4%</td>
   </tr>
   <tr>
     <td width="120"><b>JavaScript</b></td>
     <td width="230">█</td>
-    <td width="70" align="right">4.5%</td>
+    <td width="70" align="right">4.0%</td>
   </tr>
   <tr>
     <td width="120"><b>Batchfile</b></td>
     <td width="230">█</td>
-    <td width="70" align="right">1.3%</td>
+    <td width="70" align="right">1.1%</td>
   </tr>
 </table>
 
@@ -97,11 +97,11 @@ I solve complex field engineering problems by writing code — and while writing
 
 | Project | Description | Language | ★ |
 |:--|:--|:--|--:|
+| [My-Music-App](https://github.com/yigitgltkn/My-Music-App) | — | HTML | 0 |
 | [ekap-telegram-bot](https://github.com/yigitgltkn/ekap-telegram-bot) | EKAP uzerinden istenilen keyword ile istenilen ihale tiplerini otomat… | Python | 2 |
 | [Prompt-Coach](https://github.com/yigitgltkn/Prompt-Coach) | Claude Code'a gönderdiğin her prompt'u analiz eder, daha etkili halin… | TypeScript | 0 |
 | [Claude-Token-Optimizasyonu](https://github.com/yigitgltkn/Claude-Token-Optimizasyonu) | Claude Code kullanırken token kullanımı nasıl optimize edilir? Mevcut… | Python | 0 |
-| [graphrag-bilgi-asistani](https://github.com/yigitgltkn/graphrag-bilgi-asistani) | Yazılım dokümantasyonlarını yapay zekâ destekli bir bilgi grafiğine d… | Python | 0 |
 
-<sub>Generated automatically by GitHub Actions · last updated 2026-08-26 04:57 UTC</sub>
+<sub>Generated automatically by GitHub Actions · last updated 2026-08-27 15:17 UTC</sub>
 
 <!-- PANEL:END -->
