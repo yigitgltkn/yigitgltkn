@@ -97,11 +97,11 @@ I solve complex field engineering problems by writing code — and while writing
 
 | Project | Description | Language | ★ |
 |:--|:--|:--|--:|
-| [My-Music-App](https://github.com/yigitgltkn/My-Music-App) | — | HTML | 0 |
 | [ekap-telegram-bot](https://github.com/yigitgltkn/ekap-telegram-bot) | EKAP uzerinden istenilen keyword ile istenilen ihale tiplerini otomat… | Python | 2 |
+| [My-Music-App](https://github.com/yigitgltkn/My-Music-App) | — | HTML | 0 |
 | [Prompt-Coach](https://github.com/yigitgltkn/Prompt-Coach) | Claude Code'a gönderdiğin her prompt'u analiz eder, daha etkili halin… | TypeScript | 0 |
 | [Claude-Token-Optimizasyonu](https://github.com/yigitgltkn/Claude-Token-Optimizasyonu) | Claude Code kullanırken token kullanımı nasıl optimize edilir? Mevcut… | Python | 0 |
 
-<sub>Generated automatically by GitHub Actions · last updated 2026-08-27 15:17 UTC</sub>
+<sub>Generated automatically by GitHub Actions · last updated 2026-08-28 16:41 UTC</sub>
 
 <!-- PANEL:END -->
