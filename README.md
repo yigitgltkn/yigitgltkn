@@ -102,6 +102,6 @@ I solve complex field engineering problems by writing code — and while writing
 | [Prompt-Coach](https://github.com/yigitgltkn/Prompt-Coach) | Claude Code'a gönderdiğin her prompt'u analiz eder, daha etkili halin… | TypeScript | 0 |
 | [Claude-Token-Optimizasyonu](https://github.com/yigitgltkn/Claude-Token-Optimizasyonu) | Claude Code kullanırken token kullanımı nasıl optimize edilir? Mevcut… | Python | 0 |
 
-<sub>Generated automatically by GitHub Actions · last updated 2026-08-30 09:58 UTC</sub>
+<sub>Generated automatically by GitHub Actions · last updated 2026-08-31 10:54 UTC</sub>
 
 <!-- PANEL:END -->
