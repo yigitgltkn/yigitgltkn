@@ -50,8 +50,8 @@ I solve complex field engineering problems by writing code — and while writing
     <td align="center" width="120"><b>17</b><br /><sub>Public repos</sub></td>
     <td align="center" width="120"><b>2</b><br /><sub>Stars</sub></td>
     <td align="center" width="120"><b>71</b><br /><sub>Followers</sub></td>
-    <td align="center" width="120"><b>2</b><br /><sub>Commits / 30d</sub></td>
-    <td align="center" width="120"><b>1</b><br /><sub>Active projects / 30d</sub></td>
+    <td align="center" width="120"><b>0</b><br /><sub>Commits / 30d</sub></td>
+    <td align="center" width="120"><b>0</b><br /><sub>Active projects / 30d</sub></td>
   </tr>
 </table>
 
@@ -91,7 +91,7 @@ I solve complex field engineering problems by writing code — and while writing
 
 | Project | Activity | Date |
 |:--|:--|--:|
-| [EPANET-UI](https://github.com/yigitgltkn/EPANET-UI) | `2 commits` | 2026-10-26 |
+| — | No public activity in the last 90 days | — |
 
 #### Active Projects
 
@@ -102,6 +102,6 @@ I solve complex field engineering problems by writing code — and while writing
 | [Prompt-Coach](https://github.com/yigitgltkn/Prompt-Coach) | Claude Code'a gönderdiğin her prompt'u analiz eder, daha etkili halin… | TypeScript | 0 |
 | [Claude-Token-Optimizasyonu](https://github.com/yigitgltkn/Claude-Token-Optimizasyonu) | Claude Code kullanırken token kullanımı nasıl optimize edilir? Mevcut… | Python | 0 |
 
-<sub>Generated automatically by GitHub Actions · last updated 2026-11-25 14:29 UTC</sub>
+<sub>Generated automatically by GitHub Actions · last updated 2026-11-26 13:57 UTC</sub>
 
 <!-- PANEL:END -->
